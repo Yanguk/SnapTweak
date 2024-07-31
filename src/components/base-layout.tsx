@@ -25,3 +25,4 @@ export function Footer({ children }: PropsWithChildren) {
     </div>
   );
 }
+

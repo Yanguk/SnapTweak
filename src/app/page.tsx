@@ -1,4 +1,4 @@
-import { BaseLayout } from "@/components/base-layout/index";
+import * as BaseLayout from "@/components/base-layout";
 import dynamic from "next/dynamic";
 
 const LazyFilter = dynamic(() => import("../section/filter"), { ssr: false });
