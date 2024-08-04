@@ -8,7 +8,7 @@ import Konva from "konva";
 import { Button } from "@/components/ui/button";
 
 // function from https://stackoverflow.com/a/15832662/512042
-function downloadURI(uri, name) {
+function downloadURI(uri: string, name: string) {
   var link = document.createElement("a");
   link.download = name;
   link.href = uri;
