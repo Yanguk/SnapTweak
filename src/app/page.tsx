@@ -1,13 +1,15 @@
 import * as BaseLayout from "@/components/base-layout";
-import dynamic from "next/dynamic";
-
-const LazyFilter = dynamic(() => import("../section/filter"), { ssr: false });
+import Some from "./temp/page";
 
 export default function Home() {
+  return <Some />
+
   return (
     <BaseLayout.Container>
-      <BaseLayout.Header>header fix</BaseLayout.Header>
-      <BaseLayout.Body>content</BaseLayout.Body>
+      <BaseLayout.Header>준비중</BaseLayout.Header>
+      <BaseLayout.Body>
+        <Some />
+      </BaseLayout.Body>
       <BaseLayout.Footer>footer</BaseLayout.Footer>
     </BaseLayout.Container>
   );

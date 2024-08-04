@@ -3,16 +3,41 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
-import { Image, Layer, Stage } from "react-konva";
+import { Circle, Image, Layer, Line, Rect, Stage, Text } from "react-konva";
 import Konva from "konva";
+import { Button } from "@/components/ui/button";
+
+// function from https://stackoverflow.com/a/15832662/512042
+function downloadURI(uri, name) {
+  var link = document.createElement("a");
+  link.download = name;
+  link.href = uri;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
 
 export default function Filter({ image }: { image: HTMLImageElement }) {
   const [h, setH] = useState(0);
   const [s, setS] = useState(0);
   const [l, setL] = useState(0);
+  const [emboss, setEmboss] = useState(0.5);
 
+  //  var layer = new Konva.Layer();
+  //
+  // var star = new Konva.Star({
+  //   x: stage.width() / 2,
+  //   y: stage.height() / 2,
+  //   numPoints: 6,
+  //   innerRadius: 40,
+  //   outerRadius: 70,
+  //   fill: 'yellow',
+  //   stroke: 'black',
+  //   strokeWidth: 4,
+  // });
   return (
     <div className="flex size-full mt-5">
+      {/* 왼쪽 네브 */}
       <div className="w-40 space-y-2">
         <div className="space-y-2 p-2 flex-col items-center">
           <p className="text-center">Hue: {h}</p>
@@ -52,16 +77,30 @@ export default function Filter({ image }: { image: HTMLImageElement }) {
             }}
           />
         </div>
+
+        <div className="space-y-2 p-2 flex-col items-center">
+          <p className="text-center">Strength: {emboss}</p>
+          <Slider
+            disabled
+            defaultValue={[emboss]}
+            min={0}
+            max={1}
+            step={0.1}
+            onValueChange={([a]) => {
+              setEmboss(a);
+            }}
+          />
+        </div>
       </div>
 
       <Separator orientation="vertical" />
 
-      <FilterWrapper image={image} h={h} s={s} l={l} />
+      <FilterWrapper image={image} h={h} s={s} l={l} emboss={emboss} />
     </div>
   );
 }
 
-function FilterWrapper({ image, h, s, l }: any) {
+function FilterWrapper({ image, h, s, l, emboss }: any) {
   const divRef = useRef<HTMLDivElement | null>(null);
   const [dimensions, setDimensions] = useState({
     width: 0,
@@ -131,9 +170,28 @@ function FilterWrapper({ image, h, s, l }: any) {
     }
   }, [imageDimensions.width, imageRef]);
 
+  const stageRef = React.useRef<any>(null);
+
+  const handleExport = () => {
+    const uri = stageRef.current.toDataURL({
+      // mimeType: "image/jpeg",
+      // quality: 2,
+      // pixelRadio: 2,
+    });
+    console.log(uri);
+    // we also can save uri as file
+    // but in the demo on Konva website it will not work
+    // because of iframe restrictions
+    // but feel free to use it in your apps:
+    downloadURI(uri, "stage.png");
+  };
+
   return (
     <div ref={divRef} className="flex-initial relative size-full">
-      <Stage width={dimensions.width} height={dimensions.height}>
+      <Button className="mb-4" onClick={handleExport}>
+        Click here to log stage data URL
+      </Button>
+      <Stage ref={stageRef} width={dimensions.width} height={dimensions.height}>
         <Layer>
           <Image
             alt="image"
@@ -146,12 +204,49 @@ function FilterWrapper({ image, h, s, l }: any) {
             filters={[
               Konva.Filters.HSL,
               Konva.Filters.Blur,
+              // Konva.Filters.Emboss,
               // Konva.Filters.Grayscale,
             ]}
             // blukRadius={30}
             hue={h}
             saturation={s}
             luminance={l}
+            strength={emboss}
+          />
+        </Layer>
+
+        <Layer>
+          <Text
+            draggable
+            text="Drag Me!!! / 할게 너무 많은데...  어떻게하지 너무 귀찮넹"
+            fill="green"
+            fontSize={20}
+            y={420}
+            x={20}
+          />
+
+          <Rect
+            x={20}
+            y={150}
+            width={100}
+            height={100}
+            fill="red"
+            shadowBlur={10}
+            draggable
+          />
+
+          <Circle draggable x={200} y={200} radius={50} fill="green" />
+          <Line
+            x={20}
+            y={300}
+            points={[0, 0, 100, 0, 100, 100]}
+            tension={0.5}
+            closed
+            stroke="black"
+            fillLinearGradientStartPoint={{ x: -50, y: -50 }}
+            fillLinearGradientEndPoint={{ x: 50, y: 50 }}
+            fillLinearGradientColorStops={[0, "red", 1, "yellow"]}
+            draggable
           />
         </Layer>
       </Stage>

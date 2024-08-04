@@ -44,10 +44,7 @@ export default function Home() {
   }, [image]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-12 h-full">
-      <h1>대충 기능 테스트용으로 만든 데모 사이트 By yagnuk</h1>
-      <h1 className="mb-5">추후 기능 하나씩 붙혀보면서 만들어볼예정</h1>
-
+    <main className="flex min-h-screen flex-col items-center py-5 px-2 h-full">
       <InputFile onChange={onChange} />
 
       {image && (
