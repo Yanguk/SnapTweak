@@ -4,7 +4,7 @@ import { InputFile } from "@/components/file-input";
 import dynamic from "next/dynamic";
 import { ChangeEventHandler, useEffect, useState } from "react";
 
-const LazyFilter = dynamic(() => import("@/section/filter"), { ssr: false });
+const LazyFilter = dynamic(() => import("@/section/kounva"), { ssr: false });
 
 export default function Home() {
   const [image, setImage] = useState<any>(null);
