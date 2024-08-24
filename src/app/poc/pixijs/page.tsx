@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import { BlurFilter, DisplayObject, TextStyle } from "pixi.js";
 import { Stage, Container, Sprite, Text } from "@pixi/react";
@@ -12,7 +12,7 @@ interface Draggable extends DisplayObject {
   dragging: boolean;
 }
 
-const useDrag = ({ x, y }) => {
+const useDrag = ({ x, y }: any) => {
   const sprite = useRef<any>();
 
   const [isDragging, setIsDragging] = useState(false);
@@ -21,7 +21,7 @@ const useDrag = ({ x, y }) => {
   const onDown = React.useCallback(() => setIsDragging(true), []);
   const onUp = React.useCallback(() => setIsDragging(false), []);
   const onMove = React.useCallback(
-    (e) => {
+    (e: any) => {
       if (isDragging && sprite.current) {
         setPosition(e.data.getLocalPosition(sprite.current.parent));
       }
@@ -42,7 +42,7 @@ const useDrag = ({ x, y }) => {
   };
 };
 
-export default function App() {
+function App() {
   const blurFilter = useMemo(() => new BlurFilter(2), []);
   const bunnyUrl = "https://pixijs.io/pixi-react/img/bunny.png";
 
@@ -72,12 +72,22 @@ export default function App() {
           {...capBind}
         />
 
-        <Sprite
-          cursor="pointer"
-          image={PocaWord.image}
-          {...wordBind}
-        />
+        <Sprite cursor="pointer" image={PocaWord.image} {...wordBind} />
       </Stage>
     </>
   );
+}
+
+export default function WrapperApp() {
+  const [isSSr, setIsSSr] = useState(true);
+
+  useEffect(() => {
+    setIsSSr(false);
+  }, []);
+
+  if (isSSr) {
+    return null;
+  }
+
+  return <App />;
 }
