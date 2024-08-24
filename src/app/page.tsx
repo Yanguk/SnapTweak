@@ -1,5 +1,6 @@
 import * as BaseLayout from "@/components/base-layout";
 import { Button } from "@/components/ui/button";
+import { HOME_PATH } from "@/constants/preset";
 import Link from "next/link";
 
 export default function Home() {
@@ -10,13 +11,13 @@ export default function Home() {
         <div className="flex-col p-3 space-y-3 size-full">
           <div>
             <Button>
-              <Link href="/poc/kounva">go To kounva</Link>
+              <Link href={`${HOME_PATH}/poc/kounva`}>go To kounva</Link>
             </Button>
           </div>
 
           <div>
             <Button>
-              <Link href="/poc/pixijs">go To pixi</Link>
+              <Link href={`${HOME_PATH}/poc/pixijs`}>go To pixi</Link>
             </Button>
           </div>
         </div>
