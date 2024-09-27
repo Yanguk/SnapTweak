@@ -5,7 +5,10 @@ import Link from "next/link";
 export default function Home() {
   return (
     <BaseLayout.Container>
-      <BaseLayout.Header>준비중</BaseLayout.Header>
+      <BaseLayout.Header>
+        준비중
+      </BaseLayout.Header>
+
       <BaseLayout.Body>
         <div className="flex-col p-3 space-y-3 size-full">
           <div>

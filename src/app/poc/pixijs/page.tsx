@@ -9,7 +9,7 @@ import React, {
 } from "react";
 
 import { BlurFilter, DisplayObject, Graphics, TextStyle } from "pixi.js";
-import { Stage, Container, Sprite, Text } from "@pixi/react";
+import { Stage, Container, Sprite, Text, useApp } from "@pixi/react";
 import { PocaBack, PocaCap, PocaWord } from "./pocas";
 import { InputFile } from "@/components/file-input";
 import { Button } from "@/components/ui/button";
@@ -62,6 +62,7 @@ function App() {
   const blurFilter = useMemo(() => new BlurFilter(2), []);
   const bunnyUrl = "https://pixijs.io/pixi-react/img/bunny.png";
   const [image, setImage] = useState<string>("");
+  const app = useRef<any>();
 
   const [myselfImage, setMyselfImage] = useState<any>("");
 
@@ -91,19 +92,16 @@ function App() {
   const wordBind = useDrag({ x: PocaWord.x, y: PocaWord.y });
   const pictureBind = useDrag({ x: 0, y: 0 });
 
-  useEffect(() => {
-    if (ref.current) {
-      (async () => {})();
-    }
-  }, [ref]);
-
   const handleOnClick = async () => {
-    const app = ref.current.app;
+    const _app = app.current.app;
 
     const graphics = new Graphics().beginFill(0xff0000).drawCircle(0, 0, 50);
+    //
 
-    const image = await app.renderer.plugins.extract.image(
-      app.stage,
+    // ref.current.mask = _app.stage;
+
+    const image = await _app.renderer.plugins.extract.image(
+      _app.stage,
       "image/png",
       1,
     );
@@ -120,31 +118,39 @@ function App() {
       <br />
 
       <Stage
-        ref={ref}
+        ref={app}
         width={650}
         height={1004}
         options={{ background: 0xfee1c6 }}
         className="m-auto"
       >
-        {myselfImage && (
+        <Container
+          ref={ref}
+          position={[0, 0]}
+          mask={new Graphics().beginFill().drawRect(0, 0, 650, 1004)}
+        >
+          {myselfImage && (
+            <Sprite
+              width={650}
+              height={1004}
+              x={300}
+              y={-20}
+              image={myselfImage}
+              {...pictureBind}
+            />
+          )}
+          <Sprite image={PocaBack.image} x={PocaBack.x} y={PocaBack.y} />
+
           <Sprite
-            width={650}
-            height={1004}
-            image={myselfImage}
-            {...pictureBind}
+            image={PocaCap.image}
+            x={PocaCap.x}
+            y={PocaCap.y}
+            cursor="pointer"
+            {...capBind}
           />
-        )}
-        <Sprite image={PocaBack.image} x={PocaBack.x} y={PocaBack.y} />
 
-        <Sprite
-          image={PocaCap.image}
-          x={PocaCap.x}
-          y={PocaCap.y}
-          cursor="pointer"
-          {...capBind}
-        />
-
-        <Sprite cursor="pointer" image={PocaWord.image} {...wordBind} />
+          <Sprite cursor="pointer" image={PocaWord.image} {...wordBind} />
+        </Container>
       </Stage>
     </>
   );
