@@ -8,8 +8,8 @@ import React, {
   useState,
 } from "react";
 
-import { BlurFilter, DisplayObject, Graphics, TextStyle } from "pixi.js";
-import { Stage, Container, Sprite, Text, useApp } from "@pixi/react";
+import { BlurFilter, DisplayObject, Graphics, } from "pixi.js";
+import { Stage, Container, Sprite, } from "@pixi/react";
 import { PocaBack, PocaCap, PocaWord } from "./pocas";
 import { InputFile } from "@/components/file-input";
 import { Button } from "@/components/ui/button";
@@ -19,7 +19,7 @@ interface Draggable extends DisplayObject {
   dragging: boolean;
 }
 
-export function downloadURI(uri: string, name: string) {
+function downloadURI(uri: string, name: string) {
   var link = document.createElement("a");
   link.download = name;
   link.href = uri;
